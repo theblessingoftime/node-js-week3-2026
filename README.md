@@ -36,32 +36,48 @@
 // ───────────────────────────────────────────────────────────
 // TODO 任務一：初始化 state + 內部 helpers
 // ───────────────────────────────────────────────────────────
-//
-// 1. 複製 initialMembers（不直接改外部陣列）
-//    const members = [...initialMembers];
-// 2. 下一個新增會員要用的 id
-//    let nextId = initialMembers.length + 1;
-// 3. 兩個內部 helper 函式（只在這個檔案用、不 export）：
-//    - filterByQuery(list, query)：依 query.level 篩選，沒帶就回全部
-//      ← 任務二的 GET / 會呼叫它：filterByQuery(members, req.query)
-//    - validateBody(body)：驗 body 有沒有 name + level，要擋 null / undefined / {}
-//      驗證通過 → { valid: true }
-//      驗證失敗 → { valid: false, error: '缺 name 或 level' }
-//      ← 任務三的 POST / 會呼叫它：validateBody(req.body)
+
+// 1. 複製 initialMembers，不直接改外部陣列
+/* 作答區
+const members = ...;
+*/
+
+// 2. 下一個新增會員要使用的 id
+/* 作答區
+let nextId = ...;
+*/
+
+// 3. 兩個內部 helper 函式
+
+// 函式一：filterByQuery(list, query)：
+// - 依據 query.level 篩選，沒帶就回全部
+// - 任務二的 GET / 會使用到這個函式
+/* 作答區
+function filterByQuery(list, query) { ... }
+*/
+
+// 函式二：validateBody(body)
+// - 驗證 body 有沒有 name、level 欄位，要擋 null / undefined / {}
+// - 驗證通過 → { valid: true }
+// - 驗證失敗 → { valid: false, error: '缺 name 或 level' }
+// - 任務三的 POST / 會使用到這個函式
+/* 作答區
+function validateBody(body) { ... }
+*/
 
 ```
 
 ### Step 5：測試你的程式碼
 
 ```bash
-# 起 server + Postman / Swagger UI 自我檢查
+# 起 server + Postman / Swagger UI（同學自行練習）
 npm start
 
-# 執行完整 Jest 測試（看通過/失敗）
+# 執行完整 Jest 測試（繳交作業前需整體通過）
 npm test        
 ```
 
-（這個部分的詳細可參照下方 **測試與驗證** 的說明）
+（這個部分的詳細可參照下方 **驗證與測試** 的說明）
 
 
 ## 專案架構
@@ -121,38 +137,31 @@ node-js-week3-2026/
 
 ---
 
-## 測試與驗證
+## 驗證與測試
 
-### 使用 `npm start` 啟動 server，並手動進行測試：
+### 【驗證】
 
-   **方式一：Swagger UI**
-   * 開啟瀏覽器前往 `http://localhost:3000/docs`
-   * 每個 endpoint 點進去，點 **Try it out** 直接在頁面測試
+驗證部分提供給同學在作業進行中或撰寫完成後**自行練習**，透過實際發送 request、觀察回應結果，也能更直觀地了解各 API 的運作方式。
 
-   **方式二：Postman**
-   * 依照各 endpoint 的 method 與 URL 自行測試
-   * 建議測試項目：
-     * `GET /members` → **200**，回 4 筆初始會員
-     * `GET /members?level=VIP` → **200**，只回 VIP（2 筆）
-     * `GET /members/1` → **200**，`{ id: 1, name: '小華', level: 'VIP' }`
-     * `GET /members/999` → **404**，`{ error: '...' }`
-     * `POST /members` body `{"name":"阿文","level":"VIP"}` → **201**，新會員 + 自動配 id
-     * `POST /members` body `{}` → **400**，`{ error: '...' }`
-     * `PUT /members/1` body `{"level":"normal"}` → **200**，merge 後會員
-     * `PUT /members/999` → **404**，`{ error: '...' }`
-     * `DELETE /members/1` → **204**，無 body
-     * `DELETE /members/999` → **404**，`{ error: '...' }`
-     * `POST /uploadImage` 附檔案（Body → `form-data`，Key: `image`，類型選 **File**）→ **200**，`{ filename, sizeKB, savedPath }`
-     * `POST /uploadImage` 不附檔案 → **400**，`{ error: 'No file uploaded' }`
+使用前需先執行 `npm start` 啟動本地 server。
 
-### 使用 `npm test` 來完整測試：
+**方式一：Postman Collection**
+此專案附有 `week3_postman_collection.json`，匯入 Postman 後即可快速測試各 API。
+關於匯入流程、相關操作步驟，以及一些注意事項，可參考 [Week3 Postman Collection 教學]()
 
-測試結果說明：
+**方式二：Swagger UI**
+開啟瀏覽器前往 `http://localhost:3000/docs`，可在各個 API 項目點擊 **Try it out** 直接在頁面測試。
+
+### 【測試】
+
+**作業繳交前必須通過**，執行 `npm test` 來確認各個測試項目。
+
+測試結果條列：
 
 * ✓ 表示測試通過
 * ✕ 表示測試失敗
 
-看到 `Tests: 16 passed, 16 total` 即代表全數通過。
+最終看到 `Tests: 16 passed, 16 total` 即代表全數通過。
 
 **測試項目（共 16 項）**
 | 群組 | 測試數量 |
